@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>To Do List</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <style type="text/css">
+        .ui-text { -webkit-user-select:none; }
+    </style>
+
+
+</head>
+<body>
+    <nav class="nav-extended">
+            <div class="nav-wrapper">
+              <a href="#!" class="brand-logo center ui-text">Simple To Do List</a>
+              <a id="add-item-button" class="btn-floating btn-large halfway-fab waves-effect waves-light blue">
+                    <i class="material-icons">add</i>
+                  </a>
+            </div>
+          </nav>
+    <ul>
+
+    </ul>
+    <script>
+        const electron = require('electron');
+        const {ipcRenderer} = electron;
+
+        const ul = document.querySelector('ul');
+        ipcRenderer.on('item:add', function(event, payload) {
+            const li = document.createElement('a');
+            ul.className = 'collection';
+            const itemText = document.createTextNode(payload);
+            li.appendChild(itemText);
+            li.className = 'collection-item';
+            ul.appendChild(li);
+        });
+
+        ipcRenderer.on('items:clear', function(event) {
+            ul.innerHTML = '';
+        });
+
+        ul.addEventListener('dblclick', function(event) {
+            event.target.remove();
+            if(ul.children.length == 0) {
+                ul.className = '';
+            }
+        });
+
+        const fab = document.querySelector('#add-item-button');
+        fab.addEventListener('click', function(event) {
+            console.log("Sending event");
+            ipcRenderer.send('show:add-window', event);
+
+        });
+
+    </script>
+
+
+</body>
+
+
+</html>
