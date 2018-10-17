@@ -1,64 +1,158 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>To Do List</title>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <title>To Do List</title>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
-    <style type="text/css">
-        .ui-text { -webkit-user-select:none; }
-    </style>
+        <style type="text/css">
+            .ui-text { -webkit-user-select:none; }
 
-
-</head>
-<body>
-    <nav class="nav-extended">
-            <div class="nav-wrapper">
-              <a href="#!" class="brand-logo center ui-text">Simple To Do List</a>
-              <a id="add-item-button" class="btn-floating btn-large halfway-fab waves-effect waves-light blue">
-                    <i class="material-icons">add</i>
-                  </a>
-            </div>
-          </nav>
-    <ul>
-
-    </ul>
-    <script>
-        const electron = require('electron');
-        const {ipcRenderer} = electron;
-
-        const ul = document.querySelector('ul');
-        ipcRenderer.on('item:add', function(event, payload) {
-            const li = document.createElement('a');
-            ul.className = 'collection';
-            const itemText = document.createTextNode(payload);
-            li.appendChild(itemText);
-            li.className = 'collection-item';
-            ul.appendChild(li);
-        });
-
-        ipcRenderer.on('items:clear', function(event) {
-            ul.innerHTML = '';
-        });
-
-        ul.addEventListener('dblclick', function(event) {
-            event.target.remove();
-            if(ul.children.length == 0) {
-                ul.className = '';
+            .strikethrough{
+                text-decoration: line-through;
             }
-        });
+        </style>
 
-        const fab = document.querySelector('#add-item-button');
-        fab.addEventListener('click', function(event) {
-            console.log("Sending event");
-            ipcRenderer.send('show:add-window', event);
 
-        });
+    </head>
+    <body>
+        <nav class="nav-extended">
+                <div class="nav-wrapper">
+                <a href="#!" class="brand-logo center ui-text">Simple To Do List</a>
+                <a id="add-item-button" class="btn btn-floating btn-large halfway-fab waves-effect waves-light blue modal-trigger" href="#modal1">
+                        <i class="material-icons">add</i>
+                    </a>
+                </div>
+            </nav>
+        <ul>
+
+        </ul>
+
+        <div id="modal1" class="modal" tabindex="0" style="z-index: 1003; display: none; opacity: 0; top: 4%; transform: scaleX(0.8) scaleY(0.8);">
+            <div class="modal-content">
+            <h4>Add To Do Item</h4>
+            <form>
+                    <div>
+                        <label>Enter Item:</label>
+                        <input type="text" id="item" autofocus>
+                    </div>
+                    
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="cancel-modal-button" class="modal-close btn waves-effect waves-light red">Cancel&nbsp;<i class="material-icons right">cancel</i></button>
+                <button id="add-modal-button" class="modal-close btn waves-effect waves-light">Add Item&nbsp;<i class="material-icons right">send</i></button>
+            </div>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+        <script>
+            const electron = require('electron');
+            const {ipcRenderer} = electron;
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var elems = document.querySelectorAll('.modal');
+                for(var i=0; i<elems.length; i++) {
+                    console.log(elems[i]);
+                }
+                var instances = M.Modal.init(elems, {});
+            });
+
+
+            function createElement(itemText) {
+                const element = document.createElement('div');
+                element.className="valign-wrapper";
+
+                const li = document.createElement('li');
+                li.className = 'collection-item';
+                const textNode = document.createTextNode(itemText);
+                li.appendChild(textNode);
+                const div = document.createElement('div');
+                div.className = 'switch right';
+                const lbl = document.createElement('label');
+                lbl.className = "strikethrough";
+                const off = document.createTextNode("Done");
+                const on = document.createTextNode("Open");
+                const input = document.createElement('input');
+                input.setAttribute('type', 'checkbox');
+                input.checked = true;
+                input.addEventListener('change', function(event) {
+                    if(input.checked === true) {
+                        li.className = 'collection-item';
+                    } else {
+                        li.className = 'collection-item strikethrough grey-text text-lighten-1';
+                    }
+                });
+                const span = document.createElement('span');
+                span.className = 'lever';
+
+                lbl.appendChild(input);
+                lbl.appendChild(span);
+                div.appendChild(lbl);
+                element.appendChild(div);
+                element.appendChild(li);
+
+                return element;    
+            }
+
+            const ul = document.querySelector('ul');
+            ipcRenderer.on('item:add', function(event, payload) {
+                //const li = document.createElement('a');
+                ul.className = 'collection';
+                //const itemText = document.createTextNode(payload);
+                //li.appendChild(itemText);
+                //li.className = 'collection-item';
+                ul.appendChild(createElement(payload));
+            });
+
+            ipcRenderer.on('items:clear', function(event) {
+                ul.innerHTML = '';
+            });
+
+            /*ul.addEventListener('dblclick', function(event) {
+                event.target.remove();
+                if(ul.children.length == 0) {
+                    ul.className = '';
+                }
+            });*/
+
+            function sendItem(event) {
+                event.preventDefault();
+                const item = document.querySelector('#item').value;
+                if(item === null || item === '') { return false; }
+                ipcRenderer.send('item:add', item);
+                document.querySelector('#item').value = "";
+            }
+
+            const form = document.querySelector('form');
+            form.addEventListener('submit', sendItem);
+
+            const sendButton = document.querySelector('#add-modal-button');
+            sendButton.addEventListener('click', function(event) {
+                sendItem(event);
+            });
+
+            const cancelButton = document.querySelector('#cancel-modal-button');
+            cancelButton.addEventListener('click', function(event) {
+                document.querySelector('#item').value = "";
+            });
+
+
+        </script>
+
+    <!-- Compiled and minified JavaScript -->
+
+
+    <script>
+        
+
+    
 
     </script>
 
+    </body>
 
-</body>
 
-
-</html>
+    </html>
