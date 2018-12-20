@@ -12,7 +12,8 @@
   "author": "steps0x29a",
   "license": "ISC",
   "dependencies": {
-    "electron": "^3.0.4"
+    "electron": "^3.0.4",
+    "jquery": "^3.3.1"
   },
   "devDependencies": {
     "electron-packager": "^12.2.0"

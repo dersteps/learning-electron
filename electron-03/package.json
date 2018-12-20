@@ -1,20 +1,23 @@
 {
-  "name": "simple-to-do-list",
-  "version": "1.0.0",
-  "description": "Just learning the basics here",
-  "main": "main.js",
+  "name": "hephaestus",
+  "version": "0.0.1",
+  "description": "A lot of tools, packed in one electron and react based app",
+  "main": "./app/main.js",
   "scripts": {
     "start": "electron .",
     "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=release-builds",
     "package-win": "electron-packager . simple-todo --overwrite --asar=true --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Simple To Do List App\"",
     "package-linux": "electron-packager . simple-todo --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/icons/png/icon.png --prune=true --out=release-builds"
   },
-  "author": "steps0x29a",
+  "author": "smatyba",
   "license": "ISC",
-  "dependencies": {
-    "electron": "^3.0.4"
-  },
   "devDependencies": {
-    "electron-packager": "^12.2.0"
+    "electron-packager": "^13.0.1",
+    "materialize-css": "^1.0.0-rc.2",
+    "node-sass": "^4.10.0",
+    "webpack": "^4.28.0"
+  },
+  "dependencies": {
+    "electron": "^3.0.13"
   }
 }

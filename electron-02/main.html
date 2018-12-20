@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>To Do List</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+
+    <style type="text/css">
+        .ui-text {
+            -webkit-user-select: none;
+        }
+
+        .strikethrough {
+            text-decoration: line-through;
+        }
+    </style>
+
+
+</head>
+
+<body>
+    <nav class="nav-extended">
+        <div class="nav-wrapper">
+            <a href="#!" class="brand-logo center ui-text">Simple To Do List</a>
+            <a id="add-item-button" class="btn btn-floating btn-large halfway-fab waves-effect waves-light blue modal-trigger" href="#modal1">
+                <i class="material-icons">add</i>
+            </a>
+        </div>
+    </nav>
+    <ul>
+
+    </ul>
+
+    <div id="modal1" class="modal" tabindex="0" style="z-index: 1003; display: none; opacity: 0; top: 4%; transform: scaleX(0.8) scaleY(0.8);">
+        <div class="modal-content">
+            <h4>Add To Do Item</h4>
+            <form>
+                <div>
+                    <label>Enter Item:</label>
+                    <input type="text" id="item" autofocus>
+                </div>
+
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button id="cancel-modal-button" class="modal-close btn waves-effect waves-light red">Cancel&nbsp;<i class="material-icons right">cancel</i></button>
+            <button id="add-modal-button" class="modal-close btn waves-effect waves-light">Add Item&nbsp;<i class="material-icons right">send</i></button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <script type="text/javascript" src="js/frontend/helper.js"></script>
+
+    <script type="text/javascript">
+        // Call init function from helper.js
+        init();
+    </script>
+
+</body>
+
+
+</html>
